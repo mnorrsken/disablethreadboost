@@ -81,7 +81,7 @@ namespace dtb
                 {
                     if (item.PriorityBoostEnabled)
                     {
-                        msg.Add("Disabling Dynamic Thread Priority Boost");
+                        msg.Add("Disabling Thread Boost");
                         item.PriorityBoostEnabled = false;
                     }
                 }
@@ -89,15 +89,15 @@ namespace dtb
                 {
                     if(this.affinity != item.ProcessorAffinity)
                     {
-                        msg.Add($"Setting Processor Affinity {Convert.ToString((long)item.ProcessorAffinity, 2)} -> {Convert.ToString((long)this.affinity,2)}");
+                        msg.Add($"Setting Affinity {Convert.ToString((long)item.ProcessorAffinity, 2)} -> {Convert.ToString((long)this.affinity,2)}");
                         item.ProcessorAffinity = this.affinity;
                     }
 
                     //if(item.ProcessorAffinity
                 }
                 if (msg.Count > 0) {
-                    string sMessage = string.Join("\n", msg);
-                    notifyIcon1.ShowBalloonTip(3000, "PerfFix 2020", $"Detected process {item.ProcessName} (PID {item.Id})\n{sMessage}", ToolTipIcon.Info);
+                    string sMessage = string.Join(", ", msg);
+                    notifyIcon1.ShowBalloonTip(3000, "PerfFix 2020", $"Detected process {item.ProcessName} (PID {item.Id}): {sMessage}", ToolTipIcon.Info);
                 }
             }
 
