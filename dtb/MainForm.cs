@@ -16,15 +16,17 @@ namespace dtb
     {
         private IntPtr affinity = IntPtr.Zero;
         private bool disableThreadBoost = false;
+        private bool setPriority = false;
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="disableThreadBoost">Disables FlightSim threadboost if true, else do not change the value</param>
         /// <param name="affinity">Autocalc affinity if set to -1, or sets affinity to the value if > 0, if 0 do not change affinity</param>
-        public MainForm(bool disableThreadBoost, long affinity)
+        public MainForm(bool disableThreadBoost, long affinity, bool setPriority)
         {
             this.disableThreadBoost = disableThreadBoost;
+            this.setPriority = setPriority;
             InitializeComponent();
             if (affinity == -1)
             {
@@ -85,6 +87,14 @@ namespace dtb
                         item.PriorityBoostEnabled = false;
                     }
                 }
+                if (this.setPriority)
+                {
+                    if (item.PriorityClass != ProcessPriorityClass.Idle)
+                    {
+                        msg.Add("Setting Priority Low");
+                        item.PriorityClass = ProcessPriorityClass.Idle;
+                    }
+                }
                 if (this.affinity != IntPtr.Zero)
                 {
                     if(this.affinity != item.ProcessorAffinity)
@@ -93,11 +103,11 @@ namespace dtb
                         item.ProcessorAffinity = this.affinity;
                     }
 
-                    //if(item.ProcessorAffinity
                 }
+
                 if (msg.Count > 0) {
-                    string sMessage = string.Join(", ", msg);
-                    notifyIcon1.ShowBalloonTip(3000, "PerfFix 2020", $"Detected process {item.ProcessName} (PID {item.Id}): {sMessage}", ToolTipIcon.Info);
+                    string sMessage = string.Join(", ", msg.ToArray());
+                    notifyIcon1.ShowBalloonTip(3000, "PerfFix 2020", $"Detected {item.ProcessName} [{item.Id}]: {sMessage}", ToolTipIcon.Info);
                 }
             }
 

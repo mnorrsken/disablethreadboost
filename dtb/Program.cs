@@ -18,6 +18,7 @@ namespace dtb
             Application.SetCompatibleTextRenderingDefault(false);
             bool nextIsAffinity = false;
             bool disableThreadBoost = true;
+            bool setPriority = false;
             long affinity = -1;
             foreach( var opt in Environment.GetCommandLineArgs())
             {
@@ -32,9 +33,13 @@ namespace dtb
                 } else if(opt == "-n")
                 {
                     disableThreadBoost = false;
-                } 
+                } else if(opt == "-p")
+                {
+                    setPriority = true;
+                }
+
             }
-            Application.Run(new MainForm(disableThreadBoost, affinity));
+            Application.Run(new MainForm(disableThreadBoost, affinity, setPriority));
 
         }
     }
